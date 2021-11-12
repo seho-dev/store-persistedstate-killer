@@ -12,7 +12,8 @@
     "lib": ["esnext", "dom"],
     "baseUrl": "src",
     "noImplicitAny": true,
-    "noImplicitThis": true
+    "noImplicitThis": true,
+    "typeRoots": ["./typings", "./node_modules/@types"]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts"],
   "exclude": ["node_modules", "dist"]

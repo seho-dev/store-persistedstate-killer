@@ -1,0 +1,6 @@
+{
+  "watch": ["src"],
+  "ext": "ts",
+  "exec": "npm run build:esm",
+  "legacyWatch": true
+}

@@ -1,15 +1,15 @@
-import path from 'path';
-import babel from 'rollup-plugin-babel';
-import { nodeResolve } from '@rollup/plugin-node-resolve';
-import { uglify } from 'rollup-plugin-uglify';
-import merge from 'lodash.merge';
-import pkg from './package.json';
+import path from 'path'
+import babel from 'rollup-plugin-babel'
+import { nodeResolve } from '@rollup/plugin-node-resolve'
+import { uglify } from 'rollup-plugin-uglify'
+import merge from 'lodash.merge'
+import pkg from './package.json'
 
-const extensions = ['.js', '.ts', '.json'];
+const extensions = ['.js', '.ts', '.json']
 
 const resolve = function (...args) {
-  return path.resolve(__dirname, ...args);
-};
+  return path.resolve(__dirname, ...args)
+}
 
 const jobs = {
   esm: {
@@ -33,10 +33,10 @@ const jobs = {
     },
     plugins: [uglify()]
   }
-};
+}
 
 // 从环境变量获取打包特征
-const mergeConfig = jobs[process.env.FORMAT || 'esm'];
+const mergeConfig = jobs[process.env.FORMAT || 'esm']
 
 module.exports = merge(
   {
@@ -57,4 +57,4 @@ module.exports = merge(
     ]
   },
   mergeConfig
-);
+)
