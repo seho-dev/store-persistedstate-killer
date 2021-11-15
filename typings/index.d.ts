@@ -10,3 +10,5 @@ export interface CryptoCtx {
     }
   }
 }
+
+export * as plugins from './plugins'
