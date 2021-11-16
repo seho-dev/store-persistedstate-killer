@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.0-beta.2",
   "name": "store-persistedstate-killer",
   "scripts": {
     "dev": "nodemon",
@@ -12,6 +12,18 @@
     "build:umd": "rollup -c --environment FORMAT:umd",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
+  "files": [
+    "lib/*",
+    "typings/*",
+    "package.json"
+  ],
+  "keywords": [
+    "persistedstate",
+    "store-persistedstate",
+    "store-persistedstate-killer",
+    "pinia-persistedstate",
+    "vuex-persistedstate"
+  ],
   "lint-staged": {
     "*.{js,ts,json}": [
       "prettier --write",
