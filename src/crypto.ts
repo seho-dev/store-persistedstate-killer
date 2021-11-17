@@ -34,7 +34,7 @@ export default class Crypto {
    *     const res = encrypt('message')
    * @memberof Crypto
    */
-  encrypt<T extends string>(data: T): string | null {
+  encrypt(data: string): string | null {
     // 如果当前是debug模式，就不加密，直接返回原密钥
     if (this.options?.mode === 'debug') return data
     try {
@@ -55,7 +55,7 @@ export default class Crypto {
    *     const res = decrypt('message', {parse: true})
    * @memberof Crypto
    */
-  decrypt<T extends string>(data: T, options?: { parse: boolean }): string | null {
+  decrypt(data: string, options?: { parse: boolean }): string | null {
     try {
       const decrypt = crypto.AES.decrypt(data, this.key, { iv: this.iv, mode: crypto.mode.CBC, padding: crypto.pad.Pkcs7 })
       const res = decrypt.toString(crypto.enc.Utf8)
