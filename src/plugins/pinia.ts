@@ -1,12 +1,13 @@
-import { Pinia } from '../../typings/plugins/index'
 import { SubscriptionCallbackMutationDirect } from 'pinia'
 import lscache from 'lscache'
+import { Pinia } from '../../typings/plugins/index'
+import { configData, hitStore } from '../config'
 
-// 判断是否是开发环境
-const isDev = process.env.NODE_ENV === 'development'
-const key = 'persistedstate-killer'
+const { isDev, storageKeys: key } = configData
 
 export const init: Pinia['init'] = (context) => {
+  // 查看当前store是否被命中，如果没有命中，则不执行init
+  if (!hitStore(context.store.$id)) return
   // 查看目前已有的存储
   const len = localStorage.length
   // 获取之前被持久化的存储
@@ -16,7 +17,7 @@ export const init: Pinia['init'] = (context) => {
   for (let i = 0; i < len; i++) {
     // 并且需要剔除不是此store的缓存
     const name = localStorage.key(i)
-    if (name?.includes(flag) && localStorage.key(i)?.includes(key)) {
+    if (name?.includes(flag) && localStorage.key(i)?.includes(key as string)) {
       storaged.push(localStorage.key(i)?.replace('lscache-', '') as string)
     }
   }
@@ -25,10 +26,19 @@ export const init: Pinia['init'] = (context) => {
     patchData[s.split(flag)[1]] = lscache.get(s)
   })
   context.store.$patch(patchData)
+  // 将状态管理中的已知数据同步到local中
+  const state = context.store.$state
+  // 查看state是否存在于local中，如果没有，则同步
+  for (const i in state) {
+    if (lscache.get(`${flag}${i}`) === null) {
+      lscache.set(`${flag}${i}`, state[i])
+    }
+  }
 }
 
 export const use: Pinia['use'] = (context) => {
-  isDev && console.log('🥷 store-persistedstate-killer running...')
+  if (!hitStore(context.store.$id)) return
+  isDev && console.log(`🥷 store-persistedstate-killer running...`)
   // react to store changes
   context.store.$subscribe((e: SubscriptionCallbackMutationDirect) => {
     // 判断event是否是数组，如果是数组，说明是patch批量更新
