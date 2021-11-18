@@ -1,28 +1,17 @@
 import crypto from 'crypto-js'
-import { CryptoCtx, CryptoOptions } from '../typings/index'
+import { CryptoCtx } from '../typings/crypto'
 
-export default class Crypto {
-  private options: CryptoOptions | null
+export class Crypto {
   private ctx: CryptoCtx | null
   private iv: crypto.lib.WordArray
   private key: crypto.lib.WordArray
-  constructor(options?: CryptoOptions, ctx?: CryptoCtx) {
-    this.options = options || null
+  constructor(ctx?: CryptoCtx) {
     this.ctx = ctx || null
-    this.iv = crypto.lib.WordArray.random(16)
-    const title = this.ctx?.app.head.title || ''
-    const key = navigator.userAgent.toLowerCase() || ''
-    const salt = title || ''
-    this.key = crypto.PBKDF2(key, salt, {
-      keySize: 64,
-      iterations: 64
-    })
+    this.iv = crypto.enc.Utf8.parse(this.ctx?.iv || '')
+    this.key = crypto.enc.Utf8.parse(this.ctx?.key || navigator.userAgent.toLowerCase() || '')
   }
-  setKey(key: string, salt: string, keyMixTimes: number, keyLength: number): void {
-    this.key = crypto.PBKDF2(key, salt, {
-      keySize: keyLength | 64,
-      iterations: keyMixTimes | 64
-    })
+  setKey(key: string): void {
+    this.key = crypto.enc.Utf8.parse(key)
   }
   /**
    * @name 加密
@@ -35,11 +24,10 @@ export default class Crypto {
    * @memberof Crypto
    */
   encrypt(data: string): string | null {
-    // 如果当前是debug模式，就不加密，直接返回原密钥
-    if (this.options?.mode === 'debug') return data
     try {
-      const encrypted = crypto.AES.encrypt(data, this.key, { iv: this.iv, mode: crypto.mode.CBC, padding: crypto.pad.Pkcs7 })
-      return encrypted.toString()
+      const encJson = crypto.AES.encrypt(JSON.stringify(data), this.key, { iv: this.iv, mode: crypto.mode.CBC, padding: crypto.pad.Pkcs7 }).toString()
+      const encData = crypto.enc.Base64.stringify(crypto.enc.Utf8.parse(encJson))
+      return encData
     } catch (error) {
       console.log(error)
       return null
@@ -57,10 +45,11 @@ export default class Crypto {
    */
   decrypt(data: string, options?: { parse: boolean }): string | null {
     try {
-      const decrypt = crypto.AES.decrypt(data, this.key, { iv: this.iv, mode: crypto.mode.CBC, padding: crypto.pad.Pkcs7 })
-      const res = decrypt.toString(crypto.enc.Utf8)
-      return options?.parse ? JSON.parse(res) : res
+      const decData = crypto.enc.Base64.parse(data).toString(crypto.enc.Utf8)
+      const bytes = crypto.AES.decrypt(decData, this.key, { iv: this.iv, mode: crypto.mode.CBC, padding: crypto.pad.Pkcs7 }).toString(crypto.enc.Utf8)
+      return JSON.parse(bytes)
     } catch (error) {
+      console.log(error)
       return null
     }
   }
