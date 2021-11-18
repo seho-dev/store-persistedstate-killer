@@ -31,7 +31,7 @@ export const getStorage = (key: string): any => {
     _data =
       crypto.decrypt(_data, {
         parse: true
-      }) || _data
+      }) || null
   }
   return _data
 }
