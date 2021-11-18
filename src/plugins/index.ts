@@ -1,7 +1,7 @@
 import lscache from 'lscache'
 export * as pinia from './pinia'
 import { Crypto } from './../crypto'
-import { configData } from '../config'
+import { configData, getStoreConfig } from '../config'
 
 const crypto = new Crypto({
   iv: configData.title
@@ -12,12 +12,12 @@ const crypto = new Crypto({
  * @description 会根据当前的配置项来进行自动加密
  * @param {string} data
  */
-export const setStorage = (key: string, data: string): void => {
+export const setStorage = (key: string, data: string, expire?: number | null): void => {
   let _data = data
   if (!configData.isDev) {
     _data = crypto.encrypt(data) || data
   }
-  lscache.set(key, _data)
+  lscache.set(key, _data, typeof expire === 'number' ? expire : undefined)
 }
 
 /**
@@ -34,4 +34,19 @@ export const getStorage = (key: string): any => {
       }) || null
   }
   return _data
+}
+
+/**
+ * @name 获取state和renameState引用
+ * @param {string} storeName
+ */
+export const getRenameStateByStore = (storeName: string) => {
+  const storeConfig = getStoreConfig(storeName)
+  const result: Record<string, string> = {}
+  for (const key in storeConfig?.state) {
+    if (storeConfig?.state[key].rename) {
+      result[key] = storeConfig?.state[key].rename as string
+    }
+  }
+  return result
 }

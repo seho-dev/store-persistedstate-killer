@@ -1,10 +1,10 @@
-import { DefineConfig, Config, HitStore } from '../typings/config'
+import { DefineConfig, Config, HitStore, StoreConfig, StateConfig } from '../typings/config'
 
 // 配置对象, 这里配置一个默认的配置
 const baseConfig = {
   include: undefined,
   exclude: undefined,
-  storageKeys: 'persistedstate-killer',
+  storageKey: 'persistedstate-killer',
   title: '',
   isDev: process.env.NODE_ENV === 'development'
 }
@@ -18,6 +18,7 @@ export const defineConfig: DefineConfig = (config, reset = true) => {
     ...configData,
     ...config
   }
+  console.log(configData)
 }
 
 export const hitStore: HitStore = (storeName: string): boolean => {
@@ -30,4 +31,19 @@ export const hitStore: HitStore = (storeName: string): boolean => {
   // 如果include为空，但是excludeResult为false 则就命中
   if (!configData.include && !excludeResult) return true
   return false
+}
+
+export const getStoreConfig = (storeName: string): StoreConfig | null => {
+  if (configData.store && configData.store[storeName]) {
+    return configData.store[storeName] as StoreConfig
+  }
+  return null
+}
+
+export const getStateConfig = (storeName: string, stateName: string): StateConfig | null => {
+  const storeConfig = getStoreConfig(storeName)
+  if (storeConfig && storeConfig.state && storeConfig.state[stateName]) {
+    return storeConfig.state[stateName]
+  }
+  return null
 }
