@@ -1,7 +1,8 @@
-import { SubscriptionCallbackMutationDirect } from 'pinia'
 import lscache from 'lscache'
-import { Pinia } from '../../typings/plugins/index'
+import { SubscriptionCallbackMutationDirect } from 'pinia'
+import { setStorage, getStorage } from './index'
 import { configData, hitStore } from '../config'
+import { Pinia } from '../../typings/plugins/index'
 
 const { isDev, storageKeys: key } = configData
 
@@ -23,7 +24,7 @@ export const init: Pinia['init'] = (context) => {
   }
   const patchData: Record<string, unknown> = {}
   storaged.map((s) => {
-    patchData[s.split(flag)[1]] = lscache.get(s)
+    patchData[s.split(flag)[1]] = getStorage(s)
   })
   context.store.$patch(patchData)
   // 将状态管理中的已知数据同步到local中
@@ -31,7 +32,7 @@ export const init: Pinia['init'] = (context) => {
   // 查看state是否存在于local中，如果没有，则同步
   for (const i in state) {
     if (lscache.get(`${flag}${i}`) === null) {
-      lscache.set(`${flag}${i}`, state[i])
+      setStorage(`${flag}${i}`, state[i])
     }
   }
 }
@@ -56,7 +57,7 @@ export const use: Pinia['use'] = (context) => {
       }
     }
     for (const i in e.events) {
-      lscache.set(`${key}-${e.storeId}-${e.events[i].key}`, e.events[i].newValue)
+      setStorage(`${key}-${e.storeId}-${e.events[i].key}`, e.events[i].newValue)
     }
   })
 }
