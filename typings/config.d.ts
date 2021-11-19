@@ -36,4 +36,3 @@ export interface HitStore {
 }
 
 export const defineConfig: DefineConfig
-export const hitStore: HitStore

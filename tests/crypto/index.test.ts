@@ -2,10 +2,10 @@
  * @jest-environment jsdom
  */
 
-import { Crypto } from '../../src/crypto'
+import { use as crypto } from '../../src/crypto'
 
 describe('构造测试', () => {
-  const _crypto = new Crypto()
+  const _crypto = new crypto()
   it('加密测试1', () => {
     const message = 'hello, messagehello, messagehello, messagehello, messagehello, messagehello, messagehello, message'
     const encryptData = _crypto.encrypt(message)
