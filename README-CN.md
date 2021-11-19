@@ -6,8 +6,8 @@
 
 ---
 
-😄 可以为多个库提供持久化服务 (vuex, pinia) 🔧 支持 TypeScript 📦 支持 LocalStorage 🔒 支持相对安全的存储环境（非明文） 😊 自由的安装方式 🙅‍♂️ 灵活的配置且没有副
-作用 📄 对开发友好的状态变更 Log 💪 持久化加强功能 (过期时间,重命名...)
+😄 可以为多个库提供持久化服务 (vuex, pinia) <br/> 🔧 支持 TypeScript <br/> 📦 支持 LocalStorage <br/> 🔒 支持相对安全的存储环境（非明文） <br/> 😊 自由的安装方
+式 <br/> 🙅‍♂️ 灵活的配置且没有副作用 <br/> 📄 对开发友好的状态变更 Log <br/> 💪 持久化加强功能 (过期时间,重命名...)<br/>
 
 ## 安装
 
@@ -173,6 +173,6 @@ const _crypto = new crypto({
 [查看加密模块的类型声明](https://github.com/1018715564/store-persistedstate-killer/blob/master/typings/crypto.d.ts)
 
 | Api     | Desc | Type                       |
-| ------- | ---- | -------------------------- | ----- |
-| encrypt | 加密 | ` (data: string) => string | null` |
-| decrypt | 解密 | ` (data: string) => string | null` |
+| ------- | ---- | -------------------------- |
+| encrypt | 加密 | ` (data: string) => string \| null` |
+| decrypt | 解密 | ` (data: string) => string \| null` |
