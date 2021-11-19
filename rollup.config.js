@@ -16,7 +16,8 @@ const jobs = {
     output: {
       format: 'esm',
       file: resolve(pkg.module)
-    }
+    },
+    plugins: [uglify()]
   },
   umd: {
     output: {
