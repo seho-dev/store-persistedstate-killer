@@ -6,3 +6,4 @@ export interface Pinia {
 }
 
 export const pinia: Pinia
+export const defineConfig: DefineConfig
