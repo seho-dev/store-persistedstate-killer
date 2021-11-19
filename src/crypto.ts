@@ -43,7 +43,7 @@ export class Crypto {
    *     const res = decrypt('message', {parse: true})
    * @memberof Crypto
    */
-  decrypt(data: string, options?: { parse: boolean }): string | null {
+  decrypt(data: string): string | null {
     try {
       const decData = crypto.enc.Base64.parse(data).toString(crypto.enc.Utf8)
       const bytes = crypto.AES.decrypt(decData, this.key, { iv: this.iv, mode: crypto.mode.CBC, padding: crypto.pad.Pkcs7 }).toString(crypto.enc.Utf8)

@@ -28,10 +28,7 @@ export const setStorage = (key: string, data: string, expire?: number | null): v
 export const getStorage = (key: string): any => {
   let _data = lscache.get(key)
   if (!configData.isDev) {
-    _data =
-      crypto.decrypt(_data, {
-        parse: true
-      }) || null
+    _data = crypto.decrypt(_data) || null
   }
   return _data
 }
