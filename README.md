@@ -1,6 +1,6 @@
 # store-persistedstate-killer
 
-EN / [中文](https://github.com/1018715564/store-persistedstate-killer/README-CN.md)
+EN / [中文](https://github.com/1018715564/store-persistedstate-killer/blob/master/README-CN.md)
 
 🥷 A killer-level persistent state management library
 
