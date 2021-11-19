@@ -173,6 +173,6 @@ const _crypto = new crypto({
 [查看加密模块的类型声明](https://github.com/1018715564/store-persistedstate-killer/blob/master/typings/crypto.d.ts)
 
 | Api     | Desc | Type                       |
-| ------- | ---- | -------------------------- | ----- |
-| encrypt | 加密 | ` (data: string) => string | null` |
-| decrypt | 解密 | ` (data: string) => string | null` |
+| ------- | ---- | -------------------------- |
+| encrypt | 加密 | ` (data: string) => string \| null` |
+| decrypt | 解密 | ` (data: string) => string \| null` |
