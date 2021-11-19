@@ -18,7 +18,6 @@ export const defineConfig: DefineConfig = (config, reset = true) => {
     ...configData,
     ...config
   }
-  console.log(configData)
 }
 
 export const hitStore: HitStore = (storeName: string): boolean => {
