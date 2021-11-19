@@ -1,6 +1,7 @@
 import path from 'path'
 import babel from 'rollup-plugin-babel'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
+import sourcemaps from 'rollup-plugin-sourcemaps'
 import { uglify } from 'rollup-plugin-uglify'
 import merge from 'lodash.merge'
 import pkg from './package.json'
@@ -44,7 +45,8 @@ module.exports = merge(
     input: resolve('./src/index.ts'),
     output: {
       file: resolve('./', pkg.main),
-      format: 'esm'
+      format: 'esm',
+      sourcemap: true
     },
     plugins: [
       nodeResolve({
@@ -54,7 +56,8 @@ module.exports = merge(
       babel({
         exclude: 'node_modules/**',
         extensions
-      })
+      }),
+      sourcemaps()
     ]
   },
   mergeConfig
