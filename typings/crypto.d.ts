@@ -4,7 +4,7 @@ export interface CryptoCtx {
 }
 
 export interface Crypto {
-  setKey(key: string): voidCrypto
+  setKey(key: string): void
   /**
    * @name 加密
    * @template T
