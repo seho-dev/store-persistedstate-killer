@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { crypto } from '../../src/crypto'
+import { use as crypto } from '../../src/crypto'
 
 describe('构造测试', () => {
   const _crypto = new crypto()

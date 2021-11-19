@@ -1,11 +1,10 @@
-export * as pinia from './pinia'
 import { getStoreConfig } from '../config'
 
 /**
  * @name 获取state和renameState引用
  * @param {string} storeName
  */
-export const getRenameStateByStore = (storeName: string) => {
+export const getRenameStateByStore = (storeName: string): Record<string, string> => {
   const storeConfig = getStoreConfig(storeName)
   const result: Record<string, string> = {}
   for (const key in storeConfig?.state) {

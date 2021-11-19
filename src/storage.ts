@@ -1,9 +1,9 @@
 import lscache from 'lscache'
-import { Crypto } from '../src/crypto'
-
+import { use as crypto } from '../src/crypto'
 import { configData } from '../src/config'
+import { SetStorage, GetStorage, FlushExpired } from './../typings/storage'
 
-const crypto = new Crypto({
+const _crypto = new crypto({
   iv: configData.title
 })
 
@@ -12,10 +12,10 @@ const crypto = new Crypto({
  * @description 会根据当前的配置项来进行自动加密
  * @param {string} data
  */
-export const setStorage = (key: string, data: string, expire?: number | null): void => {
+export const setStorage: SetStorage = (key, data, expire) => {
   let _data = data
   if (!configData.isDev) {
-    _data = crypto.encrypt(data) || data
+    _data = _crypto.encrypt(data) || data
   }
   lscache.set(key, _data, typeof expire === 'number' ? expire : undefined)
 }
@@ -25,10 +25,10 @@ export const setStorage = (key: string, data: string, expire?: number | null): v
  * @param {string} key
  * @return {any}
  */
-export const getStorage = (key: string): any => {
+export const getStorage: GetStorage = (key) => {
   let _data = lscache.get(key)
   if (!configData.isDev) {
-    _data = crypto.decrypt(_data) || null
+    _data = _crypto.decrypt(_data) || null
   }
   return _data
 }
@@ -36,6 +36,6 @@ export const getStorage = (key: string): any => {
 /**
  * @name 刷新/删除所有已过期的存储
  */
-export const flushExpired = (): void => {
+export const flushExpired: FlushExpired = () => {
   lscache.flushExpired()
 }
