@@ -14,3 +14,5 @@ export const getRenameStateByStore = (storeName: string): Record<string, string>
   }
   return result
 }
+
+export * as pinia from './pinia'
