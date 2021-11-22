@@ -34,12 +34,7 @@ createApp(App).use(createPinia().use(plugins.pinia.init).use(plugins.pinia.use))
 
 ## Demo
 
-<iframe src="https://codesandbox.io/embed/objective-sun-1wmt7?fontsize=14&hidenavigation=1&theme=dark"
-     style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-     title="objective-sun-1wmt7"
-     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-   ></iframe>
+[codesandbox-demo](https://codesandbox.io/embed/objective-sun-1wmt7?fontsize=14&hidenavigation=1&theme=dark)
 
 > 建议从新的浏览器标签页打开 demo，以便更好的体验功能
 
