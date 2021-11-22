@@ -6,8 +6,14 @@
 
 ---
 
-😄 可以为多个库提供持久化服务 (vuex, pinia) <br/> 🔧 支持 TypeScript <br/> 📦 支持 LocalStorage <br/> 🔒 支持相对安全的存储环境（非明文） <br/> 😊 自由的安装方
-式 <br/> 🙅‍♂️ 灵活的配置且没有副作用 <br/> 📄 对开发友好的状态变更 Log <br/> 💪 持久化加强功能 (过期时间,重命名...)<br/>
+- 😄 可以为多个库提供持久化服务 (vuex, pinia)
+- 🔧 支持 TypeScript
+- 📦 支持 LocalStorage
+- 🔒 支持相对安全的存储环境（非明文）
+- 😊 自由的安装方式
+- 🙅‍♂️ 灵活的配置且没有副作用
+- 📄 对开发友好的状态变更 Log
+- 💪 持久化加强功能 (过期时间,重命名...)
 
 ## 安装
 
@@ -25,6 +31,17 @@ import { plugins, config, crypto } from 'store-persistedstate-killer'
 // pinia平台
 createApp(App).use(createPinia().use(plugins.pinia.init).use(plugins.pinia.use)).mount('#app')
 ```
+
+## Demo
+
+<iframe src="https://codesandbox.io/embed/objective-sun-1wmt7?fontsize=14&hidenavigation=1&theme=dark"
+     style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
+     title="objective-sun-1wmt7"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
+
+> 建议从新的浏览器标签页打开 demo，以便更好的体验功能
 
 ## 目标
 
@@ -64,8 +81,8 @@ use 是 killer 的核心功能，它可以监听 state 的变更以及 patch 操
 
 | Platform | Finish | Doc |
 | -------- | ------ | --- |
-| pinia2   | 🚧     | 🚧  |
-| vuex4/5  | 🙅     | 🙅  |
+| pinia2   | ✅     | 🚧  |
+| vuex4/5  | 🚧     | 🚧  |
 
 ## 核心
 
@@ -172,7 +189,7 @@ const _crypto = new crypto({
 
 [查看加密模块的类型声明](https://github.com/1018715564/store-persistedstate-killer/blob/master/typings/crypto.d.ts)
 
-| Api     | Desc | Type                       |
-| ------- | ---- | -------------------------- |
+| Api     | Desc | Type                                |
+| ------- | ---- | ----------------------------------- |
 | encrypt | 加密 | ` (data: string) => string \| null` |
 | decrypt | 解密 | ` (data: string) => string \| null` |
