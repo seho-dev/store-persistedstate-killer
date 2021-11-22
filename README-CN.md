@@ -64,8 +64,8 @@ use 是 killer 的核心功能，它可以监听 state 的变更以及 patch 操
 
 | Platform | Finish | Doc |
 | -------- | ------ | --- |
-| pinia2   | 🚧     | 🚧  |
-| vuex4/5  | 🙅     | 🙅  |
+| pinia2   | ✅     | 🚧  |
+| vuex4/5  | 🚧     | 🚧  |
 
 ## 核心
 
@@ -172,7 +172,7 @@ const _crypto = new crypto({
 
 [查看加密模块的类型声明](https://github.com/1018715564/store-persistedstate-killer/blob/master/typings/crypto.d.ts)
 
-| Api     | Desc | Type                       |
-| ------- | ---- | -------------------------- |
+| Api     | Desc | Type                                |
+| ------- | ---- | ----------------------------------- |
 | encrypt | 加密 | ` (data: string) => string \| null` |
 | decrypt | 解密 | ` (data: string) => string \| null` |
