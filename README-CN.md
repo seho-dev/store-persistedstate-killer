@@ -34,9 +34,7 @@ createApp(App).use(createPinia().use(plugins.pinia.init).use(plugins.pinia.use))
 
 ## Demo
 
-[codesandbox-demo](https://codesandbox.io/embed/objective-sun-1wmt7?fontsize=14&hidenavigation=1&theme=dark)
-
-> 建议从新的浏览器标签页打开 demo，以便更好的体验功能
+[![Edit objective-sun-1wmt7](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/objective-sun-1wmt7?fontsize=14&hidenavigation=1&theme=dark)
 
 ## 目标
 
