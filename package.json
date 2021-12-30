@@ -6,11 +6,14 @@
     "url": "https://github.com/1018715564/store-persistedstate-killer.git"
   },
   "scripts": {
-    "dev": "unbuild --stub",
-    "build": "unbuild",
+    "dev": "nodemon",
     "prettier": "prettier --write '**/*.{js,ts,json,md}'",
     "prepare": "husky install",
     "lint-staged": "lint-staged",
+    "build": "rimraf lib/* && run-p build:esm build:umd build:min",
+    "build:esm": "rollup -c --environment FORMAT:esm",
+    "build:min": "rollup -c --environment FORMAT:min",
+    "build:umd": "rollup -c --environment FORMAT:umd",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "files": [
@@ -41,6 +44,10 @@
     "lscache": "^1.3.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "@babel/preset-typescript": "^7.15.0",
+    "@rollup/plugin-node-resolve": "^13.0.5",
     "@types/crypto-js": "^4.0.2",
     "@types/jest": "^27.0.2",
     "@types/lscache": "^1.3.0",
@@ -54,20 +61,19 @@
     "jest": "^27.3.1",
     "lint-staged": "^11.1.2",
     "lodash.merge": "^4.6.2",
+    "nodemon": "^2.0.13",
+    "npm-run-all": "^4.1.5",
+    "pinia": "^2.0.3",
     "prettier": "^2.3.2",
     "rimraf": "^3.0.2",
+    "rollup": "^2.58.0",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-sourcemaps": "^0.6.3",
+    "rollup-plugin-uglify": "^6.0.4",
     "ts-jest": "^27.0.7",
-    "typescript": "^4.3.5",
-    "unbuild": "^0.5.13"
+    "typescript": "^4.3.5"
   },
-  "main": "./lib/index.cjs",
-  "module": "./lib/index.mjs",
-  "exports": {
-    ".": {
-      "require": "./lib/index.cjs",
-      "import": "./lib/index.mjs",
-      "types": "./lib/index.d.ts"
-    }
-  },
+  "main": "lib/index.umd.js",
+  "module": "lib/index.esm.js",
   "typings": "typings/index.d.ts"
 }
