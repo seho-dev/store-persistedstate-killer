@@ -1,12 +1,14 @@
 import { DefineConfig, Config, HitStore, StoreConfig, StateConfig } from '../typings/config'
 
 // 配置对象, 这里配置一个默认的配置
-const baseConfig = {
+const baseConfig: Config = {
   include: undefined,
   exclude: undefined,
   storageKey: 'persistedstate-killer',
   title: '',
-  isDev: process.env.NODE_ENV === 'development'
+  isDev: process.env.NODE_ENV === 'development',
+  setStorage: (key: string, value: string) => localStorage.setItem(key, value),
+  getStorage: (key: string) => localStorage.getItem(key)
 }
 
 export let configData: Config = baseConfig
@@ -20,6 +22,11 @@ export const defineConfig: DefineConfig = (config, reset = true) => {
   }
 }
 
+/**
+ * @name 🎯是否命中仓库根据仓库名称
+ * @param {string} storeName
+ * @return {*}  {boolean}
+ */
 export const hitStore: HitStore = (storeName: string): boolean => {
   // 如果exclude和include都没选择, 就是默认命中
   if (!configData.exclude && !configData.include) return true
@@ -32,6 +39,11 @@ export const hitStore: HitStore = (storeName: string): boolean => {
   return false
 }
 
+/**
+ * @name 获取指定仓库配置信息根据仓库名
+ * @param {string} storeName
+ * @return {*}  {(StoreConfig | null)}
+ */
 export const getStoreConfig = (storeName: string): StoreConfig | null => {
   if (configData.store && configData.store[storeName]) {
     return configData.store[storeName] as StoreConfig
@@ -39,6 +51,12 @@ export const getStoreConfig = (storeName: string): StoreConfig | null => {
   return null
 }
 
+/**
+ * @name 获取指定state配置信息根据仓库名和state名
+ * @param {string} storeName
+ * @param {string} stateName
+ * @return {*}  {(StateConfig | null)}
+ */
 export const getStateConfig = (storeName: string, stateName: string): StateConfig | null => {
   const storeConfig = getStoreConfig(storeName)
   if (storeConfig && storeConfig.state && storeConfig.state[stateName]) {

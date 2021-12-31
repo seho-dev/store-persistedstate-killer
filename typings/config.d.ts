@@ -13,8 +13,8 @@ export type Config = Readonly<{
   title?: string
   isDev?: boolean
   store?: Partial<Record<K, StoreConfig>>
-  setStorage?: () => void
-  getStorage?: () => void
+  setStorage?: (key: string, value: string) => void
+  getStorage?: (key: string) => string | null
 }>
 
 export type StoreConfig = Readonly<{
