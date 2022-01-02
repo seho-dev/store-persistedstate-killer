@@ -1,14 +1,12 @@
 import { use as crypto } from '../src/crypto'
-import { configData } from '../src/config'
+import { configData, getStorageActionConfig } from '../src/config'
 import { SetStorage, GetStorage } from './../typings/storage'
 
 const _crypto = new crypto({
   iv: configData.title
 })
 
-// 获取自定义存储驱动
-// 从配置对象中拿
-const { setStorage: _setStorage, getStorage: _getStorage } = configData
+const storageAction = getStorageActionConfig()
 
 /**
  * @name 设置storage的函数
@@ -20,7 +18,7 @@ export const setStorage: SetStorage = (key, data) => {
   if (!configData.isDev) {
     _data = _crypto.encrypt(data) || data
   }
-  _setStorage && _setStorage(key, _data)
+  storageAction && storageAction.setItem(key, _data)
 }
 
 /**
@@ -29,7 +27,7 @@ export const setStorage: SetStorage = (key, data) => {
  * @return {any}
  */
 export const getStorage: GetStorage = (key) => {
-  let _data = _getStorage && _getStorage(key)
+  let _data = storageAction && storageAction.getItem(key)
   if (!configData.isDev) {
     _data = _data ? _crypto.decrypt(_data) : null
   }

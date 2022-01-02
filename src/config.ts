@@ -4,11 +4,15 @@ import { DefineConfig, Config, HitStore, StoreConfig, StateConfig } from '../typ
 const baseConfig: Config = {
   include: undefined,
   exclude: undefined,
-  storageKey: 'persistedstate-killer',
   title: '',
   isDev: process.env.NODE_ENV === 'development',
-  setStorage: (key: string, value: string) => localStorage.setItem(key, value),
-  getStorage: (key: string) => localStorage.getItem(key)
+  storageKey: 'persistedstate-killer',
+  storageDriver: localStorage
+  // defineStorage: {
+  //   setStorage: (key: string, value: string) => localStorage.setItem(key, value),
+  //   getStorage: (key: string) => localStorage.getItem(key),
+  //   getStorageLength: () => localStorage.length
+  // }
 }
 
 export let configData: Config = baseConfig
@@ -23,7 +27,7 @@ export const defineConfig: DefineConfig = (config, reset = true) => {
 }
 
 /**
- * @name 🎯是否命中仓库根据仓库名称
+ * @name 🎯根据仓库名称判断是否命中指定仓库了
  * @param {string} storeName
  * @return {*}  {boolean}
  */
@@ -61,6 +65,32 @@ export const getStateConfig = (storeName: string, stateName: string): StateConfi
   const storeConfig = getStoreConfig(storeName)
   if (storeConfig && storeConfig.state && storeConfig.state[stateName]) {
     return storeConfig.state[stateName]
+  }
+  return null
+}
+
+/**
+ * @name 从配置对象中获取storage的突变和查询操作
+ * @return {*}  {({
+ *   setItem: (key: string, value: string) => void
+ *   getItem: (key: string) => string | null
+ *   isDefineStorage: boolean
+ *   iteration?: (cb: () => void) => void
+ * } | null)}
+ */
+export const getStorageActionConfig = (): (typeof configData.storageDriver & typeof configData.defineStorage & { isDefineStorage: boolean }) | null => {
+  // 判断配置对象中是否有自定义存储
+  if (configData.defineStorage) {
+    // 如果有就返回相应的get，set方法
+    return {
+      ...configData.defineStorage,
+      isDefineStorage: true
+    } as any
+  } else if (configData.storageDriver) {
+    return {
+      ...configData.storageDriver,
+      isDefineStorage: false
+    } as any
   }
   return null
 }

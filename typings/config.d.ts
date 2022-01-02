@@ -6,22 +6,27 @@ export interface HitStore {
   (storeName: string): boolean
 }
 
-export type Config = Readonly<{
+export type Config<K extends string = string> = Readonly<{
   exclude?: string[]
   include?: K[]
   storageKey?: string
   title?: string
   isDev?: boolean
   store?: Partial<Record<K, StoreConfig>>
-  setStorage?: (key: string, value: string) => void
-  getStorage?: (key: string) => string | null
+  // 预定义存储驱动
+  storageDriver?: typeof Storage['prototype']
+  // 自定义一个存储驱动
+  defineStorage?: {
+    setItem: (key: string, value: string) => void
+    getItem: (key: string) => string | null
+    // 迭代storage的方法
+    iteration: (cb: () => void) => void
+  }
 }>
 
 export type StoreConfig = Readonly<{
   // 重命名
   rename?: string
-  // 持久化时间
-  expire?: number
   // 给state进行细分配置
   state?: Record<string, StateConfig>
 }>
@@ -31,8 +36,6 @@ export type StateConfig = Readonly<{
   rename?: string
   // 是否关闭持久化
   noPersisted?: boolean
-  // 持久化时间
-  expire?: number
 }>
 
 export const defineConfig: DefineConfig

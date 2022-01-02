@@ -1,37 +1,36 @@
-import lscache from 'lscache'
 import { setStorage, getStorage } from './../storage'
-import { configData, hitStore, getStoreConfig, getStateConfig } from '../config'
+import { configData, hitStore, getStoreConfig, getStateConfig, getStorageActionConfig } from '../config'
 import { getRenameStateByStore } from './index'
 import { SubscriptionCallbackMutationDirect, PiniaPluginContext } from 'pinia'
 import { Pinia } from '../../typings/plugins/index'
+
+const storageAction = getStorageActionConfig()
 
 /**
  * @name 推送store数据
  * @description 以store为中心推送数据到storage中
  * @param {PiniaPluginContext} context
- * @param {({ flag: string; expire: number | null })} options
+ * @param {({ flag: string; })} options
  */
-const initPushStore = (context: PiniaPluginContext, options: { flag: string; expire: number | null }) => {
-  const { flag, expire } = options
+const initPushStore = (context: PiniaPluginContext, options: { flag: string }) => {
+  const { flag } = options
   // 将状态管理中的已知数据同步到local中
   const state = context.store.$state
   // 查看state是否存在于local中，如果没有，则同步
   for (const i in state) {
     let stateName = `${flag}${i}`
-    let _expire = expire
-    if (lscache.get(stateName) === null) {
+    if (storageAction && storageAction.getItem(stateName) === null) {
       const stateConfig = getStateConfig(context.store.$id, i)
       if (stateConfig) {
-        const { noPersisted = false, rename = i, expire = _expire } = stateConfig
+        const { noPersisted = false, rename = i } = stateConfig
         stateName = `${flag}${rename}`
-        _expire = expire
         // 判断此state是否需要序列化
         if (noPersisted) {
           // 不需要持久化
           continue
         }
       }
-      setStorage(stateName, state[i], _expire)
+      setStorage(stateName, state[i])
     }
   }
 }
@@ -44,18 +43,29 @@ const initPushStore = (context: PiniaPluginContext, options: { flag: string; exp
  */
 const initPullStorage = (context: PiniaPluginContext, options: { flag: string }) => {
   const { flag } = options
+  // 如果用户是自定义存储，就拿出自定义的迭代方法
   // 查看目前已有的存储
-  const len = localStorage.length
   // 获取之前被持久化的存储
   const storaged: string[] = []
-  // 获取所有缓存
-  for (let i = 0; i < len; i++) {
-    // 获取存储的key值（lscache-**-**-**）
-    const name = localStorage.key(i)
-    // 判断存储的名称是否包含标识且不包含过期时间标识，如果包含说明是此store的存储
-    // 过期时间的key值代表了某个key被lscache处理了，所以在这里我们不需要处理这个存储，以免把这个无用的存储同步到状态管理中
-    if (name?.includes(flag) && !name?.includes(`cacheexpiration`)) {
-      storaged.push(name?.replace('lscache-', '') as string)
+  // 定义在迭代缓存key的时候，做出的回调
+  const handleIterationCallback = (name: string | null) => {
+    // 判断存储的名称是否包含标识，如果包含说明是此store的存储
+    if (name?.includes(flag)) {
+      storaged.push(name as string)
+    }
+  }
+  // 判断用户是否有自定义的缓存迭代方法
+  if (storageAction?.isDefineStorage) {
+    // storageAction.iteration(handleIterationCallback)
+  } else {
+    // 使用预定义的存储驱动，localstorage | sessionstorage
+    const len = storageAction?.length
+    // 获取所有缓存
+    if (len) {
+      for (let i = 0; i < len; i++) {
+        const name = storageAction?.key(i)
+        handleIterationCallback(name)
+      }
     }
   }
   const patchData: Record<string, unknown> = {}
@@ -79,8 +89,6 @@ export const init: Pinia['init'] = (context) => {
   // 查看当前store是否被命中，如果没有命中，则不执行init
   if (!hitStore(context.store.$id)) return
   const storeConfig = getStoreConfig(context.store.$id)
-  // 获取store的过期时间，默认为永久
-  const expire = storeConfig?.expire || null
   // 仓库名称，会优先取rename名称，如果没有指定rename则就是原名称
   const storeName = storeConfig?.rename || context.store.$id
   // 获取缓存的name中的store名
@@ -89,16 +97,13 @@ export const init: Pinia['init'] = (context) => {
     flag
   })
   initPushStore(context, {
-    flag,
-    expire
+    flag
   })
 }
 
 export const use: Pinia['use'] = (context) => {
   if (!hitStore(context.store.$id)) return
   const storeConfig = getStoreConfig(context.store.$id)
-  // 获取store的过期时间，默认为永久
-  const expire = storeConfig?.expire || null
   // 仓库名称，会优先取rename名称，如果没有指定rename则就是原名称
   const storeName = storeConfig?.rename || context.store.$id
   configData.isDev && console.log(`🥷 store-persistedstate-killer running...`)
@@ -120,17 +125,15 @@ export const use: Pinia['use'] = (context) => {
     }
     for (const i in e.events) {
       let stateName = e.events[i].key
-      let _expire = expire
       const stateConfig = getStateConfig(context.store.$id, e.events[i].key)
       if (stateConfig) {
-        const { noPersisted = false, rename = stateName, expire = _expire } = stateConfig
-        _expire = expire
+        const { noPersisted = false, rename = stateName } = stateConfig
         stateName = rename
         if (noPersisted) {
           continue
         }
       }
-      setStorage(`${configData.storageKey}-${storeName}-${stateName}`, e.events[i].newValue, _expire)
+      setStorage(`${configData.storageKey}-${storeName}-${stateName}`, e.events[i].newValue)
     }
   })
 }
