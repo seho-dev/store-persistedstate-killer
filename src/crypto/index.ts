@@ -1,5 +1,5 @@
 import _crypto from 'crypto-js'
-import { CryptoCtx } from '../typings/crypto'
+import { CryptoCtx } from '../../typings/crypto'
 
 export class use {
   private ctx: CryptoCtx | null

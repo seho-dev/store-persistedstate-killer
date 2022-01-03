@@ -1,5 +1,5 @@
-import { DefineConfig, Config, HitStore, StoreConfig, StateConfig } from '../typings/config'
-import { defineStorageDriver } from './storage'
+import { DefineConfig, Config, HitStore, StoreConfig, StateConfig } from '../../typings/config'
+import { defineStorageDriver } from '../storage/driver'
 
 // 配置对象, 这里配置一个默认的配置
 const baseConfig: Config = {
@@ -75,7 +75,6 @@ export const getStateConfig = (storeName: string, stateName: string): StateConfi
  * @return {*}  {((typeof configData.storageDriver & typeof configData.defineStorage & { isDefineStorage: boolean }) | null)}
  */
 export const getStorageActionConfig = (): (typeof configData.storageDriver & typeof configData.defineStorage & { isDefineStorage: boolean }) | null => {
-  console.log(configData)
   // 判断配置对象中是否有自定义存储
   if (configData.defineStorage) {
     // 如果有就返回相应的get，set方法
