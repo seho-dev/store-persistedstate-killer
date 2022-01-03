@@ -10,8 +10,8 @@ export interface HitStore {
 export type Config<K extends string = string> = Readonly<{
   exclude?: string[]
   include?: K[]
-  storageKey?: string
-  title?: string
+  prefix?: string
+  iv?: string
   isDev?: boolean
   store?: Partial<Record<K, StoreConfig>>
   // 预定义存储驱动
@@ -21,7 +21,7 @@ export type Config<K extends string = string> = Readonly<{
     setItem: (key: string, value: string) => void
     getItem: (key: string) => string | null
     // 迭代storage的方法
-    iteration: (cb: () => void) => void
+    iteration: (cb: (name: string | null) => void) => void
   }
 }>
 
