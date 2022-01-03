@@ -1,3 +1,4 @@
+import { StorageDriver } from './storage'
 export interface DefineConfig {
   <K extends string = string>(config: Config<K>): void
 }
@@ -14,7 +15,7 @@ export type Config<K extends string = string> = Readonly<{
   isDev?: boolean
   store?: Partial<Record<K, StoreConfig>>
   // 预定义存储驱动
-  storageDriver?: typeof Storage['prototype']
+  storageDriver?: StorageDriver
   // 自定义一个存储驱动
   defineStorage?: {
     setItem: (key: string, value: string) => void

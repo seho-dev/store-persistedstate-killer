@@ -1,7 +1,8 @@
-import { use as crypto } from '../src/crypto'
 import { configData, getStorageActionConfig } from '../src/config'
-import { SetStorage, GetStorage } from './../typings/storage'
+import { use as crypto } from '../src/crypto'
+import { SetStorage, GetStorage, DefineStorageDriver } from './../typings/storage'
 
+console.log(configData)
 const _crypto = new crypto({
   iv: configData.title
 })
@@ -32,4 +33,19 @@ export const getStorage: GetStorage = (key) => {
     _data = _data ? _crypto.decrypt(_data) : null
   }
   return _data
+}
+
+/**
+ * @name 定义存储驱动
+ * @param {*} name
+ * @return {*}
+ */
+export const defineStorageDriver: DefineStorageDriver = (name) => {
+  const storage = name === 'localStorage' ? localStorage : sessionStorage
+  return {
+    setItem: (key: string, value: string) => storage.setItem(key, value),
+    getItem: (key: string) => storage.getItem(key),
+    key: (index: number) => storage.key(index),
+    length: storage.length
+  }
 }

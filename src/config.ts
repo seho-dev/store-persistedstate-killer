@@ -1,4 +1,5 @@
 import { DefineConfig, Config, HitStore, StoreConfig, StateConfig } from '../typings/config'
+import { defineStorageDriver } from './storage'
 
 // 配置对象, 这里配置一个默认的配置
 const baseConfig: Config = {
@@ -7,7 +8,7 @@ const baseConfig: Config = {
   title: '',
   isDev: process.env.NODE_ENV === 'development',
   storageKey: 'persistedstate-killer',
-  storageDriver: localStorage
+  storageDriver: defineStorageDriver('localStorage')
   // defineStorage: {
   //   setStorage: (key: string, value: string) => localStorage.setItem(key, value),
   //   getStorage: (key: string) => localStorage.getItem(key),
@@ -71,14 +72,10 @@ export const getStateConfig = (storeName: string, stateName: string): StateConfi
 
 /**
  * @name 从配置对象中获取storage的突变和查询操作
- * @return {*}  {({
- *   setItem: (key: string, value: string) => void
- *   getItem: (key: string) => string | null
- *   isDefineStorage: boolean
- *   iteration?: (cb: () => void) => void
- * } | null)}
+ * @return {*}  {((typeof configData.storageDriver & typeof configData.defineStorage & { isDefineStorage: boolean }) | null)}
  */
 export const getStorageActionConfig = (): (typeof configData.storageDriver & typeof configData.defineStorage & { isDefineStorage: boolean }) | null => {
+  console.log(configData)
   // 判断配置对象中是否有自定义存储
   if (configData.defineStorage) {
     // 如果有就返回相应的get，set方法
@@ -87,6 +84,7 @@ export const getStorageActionConfig = (): (typeof configData.storageDriver & typ
       isDefineStorage: true
     } as any
   } else if (configData.storageDriver) {
+    console.log(configData.storageDriver)
     return {
       ...configData.storageDriver,
       isDefineStorage: false

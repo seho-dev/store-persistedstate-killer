@@ -1,5 +1,5 @@
-import { setStorage, getStorage } from './../storage'
 import { configData, hitStore, getStoreConfig, getStateConfig, getStorageActionConfig } from '../config'
+import { setStorage, getStorage } from './../storage'
 import { getRenameStateByStore } from './index'
 import { SubscriptionCallbackMutationDirect, PiniaPluginContext } from 'pinia'
 import { Pinia } from '../../typings/plugins/index'
