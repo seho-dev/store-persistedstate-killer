@@ -26,6 +26,10 @@ export const defineConfig: DefineConfig = (config, reset = true) => {
     ...configData,
     ...config
   })
+
+  // TODO 将config对象持久化（持久化方式取决于存储驱动）
+  // TODO 将旧配置对象进行md5
+  // TODO 每次调用这个方法都会将此config对象md5和缓存中的config进行比对，如果比对失败，说明有配置修改，就重新重置killer缓存，并且重新运行init和use方法
 }
 
 /**
