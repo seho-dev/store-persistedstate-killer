@@ -1,5 +1,5 @@
-import { configData, hitStore, getStoreConfig, getStateConfig, getStorageActionConfig, GetStorageActionConfigReturn } from '../config'
-import { setStorage, getStorage } from '../storage'
+import { configData, hitStore, getStoreConfig, getStateConfig, getStorageActionConfig } from '../config'
+import { setStorage, getStorage, iterationStorageDriverAllKeys } from '../storage'
 import { getRenameStateByStore } from './index'
 import { SubscriptionCallbackMutationDirect, PiniaPluginContext } from 'pinia'
 import { Pinia } from '../../typings/plugins/index'
@@ -59,15 +59,8 @@ const initPullStorage = (context: PiniaPluginContext, options: { flag: string })
     // 执行自定义回调
     storageAction.iteration(handleIterationCallback)
   } else {
-    // 使用预定义的存储驱动，localstorage | sessionstorage
-    const len = storageAction?.length
-    // 获取所有缓存
-    if (len) {
-      for (let i = 0; i < len; i++) {
-        const name = storageAction?.key(i)
-        handleIterationCallback(name)
-      }
-    }
+    // 迭代预定义驱动的存储的每个key
+    iterationStorageDriverAllKeys(handleIterationCallback)
   }
   const patchData: Record<string, unknown> = {}
   storaged.map((s) => {

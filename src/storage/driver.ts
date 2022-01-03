@@ -10,6 +10,7 @@ export const defineStorageDriver: DefineStorageDriver = (name) => {
   return {
     setItem: (key: string, value: string) => storage.setItem(key, value),
     getItem: (key: string) => storage.getItem(key),
+    removeItem: (key: string) => storage.removeItem(key),
     key: (index: number) => storage.key(index),
     length: storage.length
   }

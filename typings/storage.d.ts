@@ -9,6 +9,7 @@ export interface GetStorage {
 export interface StorageDriver {
   setItem: Storage['setItem']
   getItem: Storage['getItem']
+  removeItem: Storage['removeItem']
   key: Storage['key']
   length: Storage['length']
 }

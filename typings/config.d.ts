@@ -20,6 +20,7 @@ export type Config<K extends string = string> = Readonly<{
   defineStorage?: {
     setItem: (key: string, value: string) => void
     getItem: (key: string) => string | null
+    removeItem: (key: string) => void
     // 迭代storage的方法
     iteration: (cb: (name: string | null) => void) => void
   }
