@@ -33,3 +33,19 @@ export const getStorage: GetStorage = (key) => {
   }
   return _data
 }
+
+/**
+ * @name 根据预定义驱动迭代存储key
+ * @param {((name: string | null) => void)} cb
+ */
+export const iterationStorageDriverAllKeys = (cb: (name: string | null) => void): void => {
+  const storageAction = getStorageActionConfig()
+  const len = storageAction?.length
+  // 获取所有缓存
+  if (len) {
+    for (let i = 0; i < len; i++) {
+      const name = storageAction?.key(i)
+      cb(name)
+    }
+  }
+}
