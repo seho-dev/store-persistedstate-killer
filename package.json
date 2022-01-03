@@ -8,7 +8,6 @@
   "scripts": {
     "dev": "nodemon",
     "prettier": "prettier --write '**/*.{js,ts,json,md}'",
-    "prepare": "husky install",
     "lint-staged": "lint-staged",
     "build": "rimraf lib/* && run-p build:esm build:umd build:min",
     "build:esm": "rollup -c --environment FORMAT:esm",
@@ -40,6 +39,7 @@
     ]
   },
   "dependencies": {
+    "@nx-js/observer-util": "^4.2.2",
     "crypto-js": "^4.1.1"
   },
   "devDependencies": {
