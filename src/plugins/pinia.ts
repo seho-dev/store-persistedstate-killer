@@ -1,10 +1,9 @@
-import { configData, hitStore, getStoreConfig, getStateConfig, getStorageActionConfig } from '../config'
+import { configData, hitStore, getStoreConfig, getStateConfig, getStorageActionConfig, GetStorageActionConfigReturn } from '../config'
 import { setStorage, getStorage } from '../storage'
 import { getRenameStateByStore } from './index'
 import { SubscriptionCallbackMutationDirect, PiniaPluginContext } from 'pinia'
 import { Pinia } from '../../typings/plugins/index'
-
-const storageAction = getStorageActionConfig()
+import { observe } from '@nx-js/observer-util'
 
 /**
  * @name 推送store数据
@@ -19,7 +18,7 @@ const initPushStore = (context: PiniaPluginContext, options: { flag: string }) =
   // 查看state是否存在于local中，如果没有，则同步
   for (const i in state) {
     let stateName = `${flag}${i}`
-    if (storageAction && storageAction.getItem(stateName) === null) {
+    if (getStorage(stateName) === null) {
       const stateConfig = getStateConfig(context.store.$id, i)
       if (stateConfig) {
         const { noPersisted = false, rename = i } = stateConfig
@@ -42,6 +41,7 @@ const initPushStore = (context: PiniaPluginContext, options: { flag: string }) =
  * @param {({ flag: string; expire: number | null })} options
  */
 const initPullStorage = (context: PiniaPluginContext, options: { flag: string }) => {
+  const storageAction = getStorageActionConfig()
   const { flag } = options
   // 如果用户是自定义存储，就拿出自定义的迭代方法
   // 查看目前已有的存储
@@ -56,7 +56,8 @@ const initPullStorage = (context: PiniaPluginContext, options: { flag: string })
   }
   // 判断用户是否有自定义的缓存迭代方法
   if (storageAction?.isDefineStorage) {
-    // storageAction.iteration(handleIterationCallback)
+    // 执行自定义回调
+    storageAction.iteration(handleIterationCallback)
   } else {
     // 使用预定义的存储驱动，localstorage | sessionstorage
     const len = storageAction?.length
@@ -92,7 +93,7 @@ export const init: Pinia['init'] = (context) => {
   // 仓库名称，会优先取rename名称，如果没有指定rename则就是原名称
   const storeName = storeConfig?.rename || context.store.$id
   // 获取缓存的name中的store名
-  const flag = `${configData.storageKey}-${storeName}-`
+  const flag = `${configData.prefix}${storeName}-`
   initPullStorage(context, {
     flag
   })
@@ -133,7 +134,7 @@ export const use: Pinia['use'] = (context) => {
           continue
         }
       }
-      setStorage(`${configData.storageKey}-${storeName}-${stateName}`, e.events[i].newValue)
+      setStorage(`${configData.prefix}${storeName}-${stateName}`, e.events[i].newValue)
     }
   })
 }

@@ -1,30 +1,31 @@
 import { DefineConfig, Config, HitStore, StoreConfig, StateConfig } from '../../typings/config'
 import { defineStorageDriver } from '../storage/driver'
+import { observable } from '@nx-js/observer-util'
 
 // 配置对象, 这里配置一个默认的配置
 const baseConfig: Config = {
   include: undefined,
   exclude: undefined,
-  title: '',
+  iv: '',
   isDev: process.env.NODE_ENV === 'development',
-  storageKey: 'persistedstate-killer',
+  prefix: 'persistedstate-killer-',
   storageDriver: defineStorageDriver('localStorage')
-  // defineStorage: {
-  //   setStorage: (key: string, value: string) => localStorage.setItem(key, value),
-  //   getStorage: (key: string) => localStorage.getItem(key),
-  //   getStorageLength: () => localStorage.length
-  // }
 }
 
-export let configData: Config = baseConfig
+export let configData: Config = observable(baseConfig)
 
+/**
+ * @name 用户传入配置项
+ * @param {*} config
+ * @param {boolean} [reset=true]
+ */
 export const defineConfig: DefineConfig = (config, reset = true) => {
   if (reset) configData = baseConfig
   // 注册
-  configData = {
+  configData = observable({
     ...configData,
     ...config
-  }
+  })
 }
 
 /**
@@ -74,7 +75,8 @@ export const getStateConfig = (storeName: string, stateName: string): StateConfi
  * @name 从配置对象中获取storage的突变和查询操作
  * @return {*}  {((typeof configData.storageDriver & typeof configData.defineStorage & { isDefineStorage: boolean }) | null)}
  */
-export const getStorageActionConfig = (): (typeof configData.storageDriver & typeof configData.defineStorage & { isDefineStorage: boolean }) | null => {
+export type GetStorageActionConfigReturn = (typeof configData.storageDriver & typeof configData.defineStorage & { isDefineStorage: boolean }) | null
+export const getStorageActionConfig = (): GetStorageActionConfigReturn => {
   // 判断配置对象中是否有自定义存储
   if (configData.defineStorage) {
     // 如果有就返回相应的get，set方法
@@ -83,7 +85,6 @@ export const getStorageActionConfig = (): (typeof configData.storageDriver & typ
       isDefineStorage: true
     } as any
   } else if (configData.storageDriver) {
-    console.log(configData.storageDriver)
     return {
       ...configData.storageDriver,
       isDefineStorage: false

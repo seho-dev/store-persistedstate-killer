@@ -3,10 +3,8 @@ import { use as crypto } from '../crypto'
 import { SetStorage, GetStorage } from '../../typings/storage'
 
 const _crypto = new crypto({
-  iv: configData.title
+  iv: configData.iv
 })
-
-const storageAction = getStorageActionConfig()
 
 /**
  * @name 设置storage的函数
@@ -14,6 +12,7 @@ const storageAction = getStorageActionConfig()
  * @param {string} data
  */
 export const setStorage: SetStorage = (key, data) => {
+  const storageAction = getStorageActionConfig()
   let _data = data
   if (!configData.isDev) {
     _data = _crypto.encrypt(data) || data
@@ -27,6 +26,7 @@ export const setStorage: SetStorage = (key, data) => {
  * @return {any}
  */
 export const getStorage: GetStorage = (key) => {
+  const storageAction = getStorageActionConfig()
   let _data = storageAction && storageAction.getItem(key)
   if (!configData.isDev) {
     _data = _data ? _crypto.decrypt(_data) : null

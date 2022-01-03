@@ -4,11 +4,11 @@ import { CryptoCtx } from '../../typings/crypto'
 export class use {
   private ctx: CryptoCtx | null
   private iv: _crypto.lib.WordArray
-  private key: _crypto.lib.WordArray
+  private key: _crypto.lib.WordArray | string
   constructor(ctx?: CryptoCtx) {
     this.ctx = ctx || null
     this.iv = _crypto.enc.Utf8.parse(this.ctx?.iv || '')
-    this.key = _crypto.enc.Utf8.parse(this.ctx?.key || navigator.userAgent.toLowerCase() || '')
+    this.key = this.ctx?.key || navigator.userAgent.toLowerCase() || ''
   }
   setKey(key: string): void {
     this.key = _crypto.enc.Utf8.parse(key)
