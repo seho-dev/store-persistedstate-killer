@@ -3,7 +3,6 @@ import { setStorage, getStorage, iterationStorageDriverAllKeys } from '../storag
 import { getRenameStateByStore } from './index'
 import { SubscriptionCallbackMutationDirect, PiniaPluginContext } from 'pinia'
 import { Pinia } from '../../typings/plugins/index'
-import { observe } from '@nx-js/observer-util'
 
 /**
  * @name 推送store数据

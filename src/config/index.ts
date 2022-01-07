@@ -1,6 +1,6 @@
 import { DefineConfig, Config, HitStore, StoreConfig, StateConfig } from '../../typings/config'
 import { defineStorageDriver } from '../storage/driver'
-import { observable } from '@nx-js/observer-util'
+import { clearKillerStorage } from '../plugins'
 
 // 配置对象, 这里配置一个默认的配置
 const baseConfig: Config = {
@@ -12,7 +12,7 @@ const baseConfig: Config = {
   storageDriver: defineStorageDriver('localStorage')
 }
 
-export let configData: Config = observable(baseConfig)
+export let configData: Config = baseConfig
 
 /**
  * @name 用户传入配置项
@@ -22,14 +22,11 @@ export let configData: Config = observable(baseConfig)
 export const defineConfig: DefineConfig = (config, reset = true) => {
   if (reset) configData = baseConfig
   // 注册
-  configData = observable({
+  configData = {
     ...configData,
     ...config
-  })
-
-  // TODO 将config对象持久化（持久化方式取决于存储驱动）
-  // TODO 将旧配置对象进行md5
-  // TODO 每次调用这个方法都会将此config对象md5和缓存中的config进行比对，如果比对失败，说明有配置修改，就重新重置killer缓存，并且重新运行init和use方法
+  }
+  clearKillerStorage()
 }
 
 /**
@@ -80,17 +77,18 @@ export const getStateConfig = (storeName: string, stateName: string): StateConfi
  * @return {*}  {((typeof configData.storageDriver & typeof configData.defineStorage & { isDefineStorage: boolean }) | null)}
  */
 export type GetStorageActionConfigReturn = (typeof configData.storageDriver & typeof configData.defineStorage & { isDefineStorage: boolean }) | null
-export const getStorageActionConfig = (): GetStorageActionConfigReturn => {
+export const getStorageActionConfig = (config?: Config): GetStorageActionConfigReturn => {
+  const _config = config || configData
   // 判断配置对象中是否有自定义存储
-  if (configData.defineStorage) {
+  if (_config.defineStorage) {
     // 如果有就返回相应的get，set方法
     return {
-      ...configData.defineStorage,
+      ..._config.defineStorage,
       isDefineStorage: true
     } as any
-  } else if (configData.storageDriver) {
+  } else if (_config.storageDriver) {
     return {
-      ...configData.storageDriver,
+      ..._config.storageDriver,
       isDefineStorage: false
     } as any
   }

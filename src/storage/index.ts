@@ -1,21 +1,23 @@
 import { configData, getStorageActionConfig } from '../config'
 import { use as crypto } from '../crypto'
-import { SetStorage, GetStorage } from '../../typings/storage'
+import { SetStorage, GetStorage, RemoveStorage } from '../../typings/storage'
 
-const _crypto = new crypto({
-  iv: configData.iv
-})
+const getCrypto = () => {
+  return new crypto({
+    iv: configData.iv
+  })
+}
 
 /**
  * @name 设置storage的函数
  * @description 会根据当前的配置项来进行自动加密
  * @param {string} data
  */
-export const setStorage: SetStorage = (key, data) => {
+export const setStorage: SetStorage = (key, data, needCrypto) => {
   const storageAction = getStorageActionConfig()
   let _data = data
-  if (!configData.isDev) {
-    _data = _crypto.encrypt(data) || data
+  if (!configData.isDev && needCrypto) {
+    _data = getCrypto().encrypt(data) || data
   }
   storageAction && storageAction.setItem(key, _data)
 }
@@ -25,13 +27,22 @@ export const setStorage: SetStorage = (key, data) => {
  * @param {string} key
  * @return {any}
  */
-export const getStorage: GetStorage = (key) => {
+export const getStorage: GetStorage = (key, needCrypto) => {
   const storageAction = getStorageActionConfig()
   let _data = storageAction && storageAction.getItem(key)
-  if (!configData.isDev) {
-    _data = _data ? _crypto.decrypt(_data) : null
+  if (!configData.isDev && needCrypto) {
+    _data = _data ? getCrypto().decrypt(_data) : null
   }
   return _data
+}
+
+/**
+ * @name 删除storage的函数
+ * @param {*} key
+ */
+export const removeStorage: RemoveStorage = (key) => {
+  const storageAction = getStorageActionConfig()
+  storageAction && storageAction.removeItem(key)
 }
 
 /**

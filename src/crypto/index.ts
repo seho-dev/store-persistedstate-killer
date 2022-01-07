@@ -10,6 +10,9 @@ export class use {
     this.iv = _crypto.enc.Utf8.parse(this.ctx?.iv || '')
     this.key = this.ctx?.key || navigator.userAgent.toLowerCase() || ''
   }
+  static md5(data: string): string {
+    return _crypto.MD5(data).toString()
+  }
   setKey(key: string): void {
     this.key = _crypto.enc.Utf8.parse(key)
   }

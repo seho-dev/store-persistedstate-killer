@@ -26,6 +26,7 @@ export const clearKillerStorage = (): void => {
   // 定义一个函数用于匹配killer名称
   const matchKillerStorageKey = (name: string | null) => {
     if (configData.prefix) {
+      console.log(name)
       if (name?.indexOf(configData.prefix) === 0) {
         clearKeys.push(name)
       }
