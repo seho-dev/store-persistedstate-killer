@@ -48,7 +48,7 @@ createApp(App)
 ## What killer does
 
 
-<img src='https://vkceyugu.cdn.bspapp.com/VKCEYUGU-c7e81452-9d28-4486-bedc-5dbf7c8386a5/3d3edf75-8e6d-4262-ae67-7ffb90da1141.png' />
+<img src='https://static.yinzhuoei.com/typecho/2022/01/07/486183517624630/3d3edf75-8e6d-4262-ae67-7ffb90da1141.png' />
 
 ## Design
 
