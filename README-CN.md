@@ -1,6 +1,6 @@
 # store-persistedstate-killer
 
-[EN](https://github.com/1018715564/store-persistedstate-killer/README.md) / 中文
+[EN](https://github.com/1018715564/store-persistedstate-killer/blob/master/README.md) / 中文
 
 🥷 杀手级别的持久化状态管理库
 
@@ -49,7 +49,7 @@ createApp(App)
 
 ## killer 做的事情
 
-<img src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-c7e81452-9d28-4486-bedc-5dbf7c8386a5/3d3edf75-8e6d-4262-ae67-7ffb90da1141.png" />
+<img src='https://vkceyugu.cdn.bspapp.com/VKCEYUGU-c7e81452-9d28-4486-bedc-5dbf7c8386a5/3d3edf75-8e6d-4262-ae67-7ffb90da1141.png' />
 
 ## 设计
 
