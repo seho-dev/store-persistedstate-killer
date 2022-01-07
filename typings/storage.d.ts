@@ -1,15 +1,25 @@
 export interface SetStorage {
-  (key: string, data: string, expire?: number | null): void
+  (key: string, data: string, needCrypto?: boolean = true): void
 }
 
 export interface GetStorage {
+  (key: string, needCrypto?: boolean = true): any
+}
+export interface RemoveStorage {
   (key: string): any
 }
 
-export interface FlushExpired {
-  (): void
+export interface StorageDriver {
+  setItem: Storage['setItem']
+  getItem: Storage['getItem']
+  removeItem: Storage['removeItem']
+  key: Storage['key']
+  length: Storage['length']
+}
+
+export interface DefineStorageDriver {
+  (name: 'localStorage' | 'sessionStorage'): StorageDriver
 }
 
 export const setStorage: SetStorage
 export const getStorage: GetStorage
-export const flushExpired: FlushExpired
