@@ -106,7 +106,7 @@ killer 本身自带一个开箱即用的配置，你如果有特殊的需要，�
 | isDev  | 是否是开发环境     | boolean | process.env.NODE_ENV === 'development'  | 如果为false将自动加密 |
 | storageDriver  | 插件预定义的存储驱动     | defineStorageDriver | defineStorageDriver('localStorage') | 支持传入localStorage和sessionStorage |
 | store  | 对仓库进行详细配置     | Partial<Record<K, StoreConfig>> | 没有默认配置 |  |
-| defineStorage  | 自定义存储驱动     | setItem, getItem, iteration | 没有默认配置 | 如果预定义存储驱动defineStorageDriver没有满足你的需求，可以使用这个方法定义新的驱动 |
+| defineStorage  | 自定义存储驱动     | setItem, getItem, removeItem, iteration | 没有默认配置 | 如果预定义存储驱动defineStorageDriver没有满足你的需求，可以使用这个方法定义新的驱动 |
 
 你的工程中的自定义配置可能就像这样:
 
