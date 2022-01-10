@@ -105,7 +105,7 @@ Killer itself comes with an out-of-the-box configuration, if you have special ne
 | isDev | Is it a development environment | boolean | process.env.NODE_ENV === 'development' | If false, it will be encrypted automatically |
 | storageDriver | Plug-in predefined storage drivers | defineStorageDriver | defineStorageDriver('localStorage') | Support incoming localStorage and sessionStorage |
 | store | Detailed configuration of the warehouse | Partial<Record<K, StoreConfig>> | No default configuration | |
-| defineStorage | Custom storage driver | setItem, getItem, iteration | No default configuration | If the predefined storage driver defineStorageDriver does not meet your needs, you can use this method to define a new driver |
+| defineStorage | Custom storage driver | setItem, getItem, removeItem, iteration | No default configuration | If the predefined storage driver defineStorageDriver does not meet your needs, you can use this method to define a new driver |
 
 A custom configuration in your project might look like this:
 

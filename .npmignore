@@ -1,0 +1,6 @@
+.*
+src
+tests
+jest.config.mjs
+nodemon.json
+rollup.config.js
