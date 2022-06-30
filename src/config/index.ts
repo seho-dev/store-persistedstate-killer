@@ -1,6 +1,5 @@
 import { DefineConfig, Config, HitStore, StoreConfig, StateConfig } from '../../typings/config'
 import { defineStorageDriver } from '../storage/driver'
-import { clearKillerStorage } from '../plugins'
 
 // 配置对象, 这里配置一个默认的配置
 const baseConfig: Config = {
@@ -26,7 +25,6 @@ export const defineConfig: DefineConfig = (config, reset = true) => {
     ...configData,
     ...config
   }
-  clearKillerStorage()
 }
 
 /**
