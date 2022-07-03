@@ -101,32 +101,37 @@ export const use: Pinia['use'] = (context) => {
   const storeName = storeConfig?.rename || context.store.$id
   configData.isDev && console.log(`🥷 store-persistedstate-killer running...`)
   // react to store changes
-  context.store.$subscribe((e: SubscriptionCallbackMutationDirect) => {
-    // 判断event是否是数组，如果是数组，说明是patch批量更新
-    const isEventArray = Array.isArray(e.events)
-    // 如果event是空数组，说明是无用的patch（patch的数据和旧数据一样）
-    if (isEventArray && e.events.length === 0) return
-    // 更新 storage
-    if (!isEventArray) {
-      e.events = [e.events]
-    }
-    configData.isDev && console.log('🥷 react to store changes:')
-    if (configData.isDev) {
-      for (const i in e.events) {
-        console.log(`🥷 ${e.events[i].key} (${e.storeId}): ${e.events[i].oldValue} -> ${e.events[i].newValue}`)
+  context.store.$subscribe(
+    (e: SubscriptionCallbackMutationDirect) => {
+      console.log(e)
+      const isEventArray = Array.isArray(e.events)
+      // 如果event是空数组，说明是无用的patch（patch的数据和旧数据一样）
+      if (isEventArray && e.events.length === 0) return
+      // 更新 storage
+      if (!isEventArray) {
+        e.events = [e.events]
       }
-    }
-    for (const i in e.events) {
-      let stateName = e.events[i].key
-      const stateConfig = getStateConfig(context.store.$id, e.events[i].key)
-      if (stateConfig) {
-        const { noPersisted = false, rename = stateName } = stateConfig
-        stateName = rename
-        if (noPersisted) {
-          continue
+      configData.isDev && console.log('🥷 react to store changes:')
+      if (configData.isDev) {
+        for (const i in e.events) {
+          console.log(`🥷 ${e.events[i].key} (${e.storeId}): ${e.events[i].oldValue} -> ${e.events[i].newValue}`)
         }
       }
-      setStorage(`${configData.prefix}${storeName}-${stateName}`, e.events[i].newValue)
+      for (const i in e.events) {
+        let stateName = e.events[i].key
+        const stateConfig = getStateConfig(context.store.$id, e.events[i].key)
+        if (stateConfig) {
+          const { noPersisted = false, rename = stateName } = stateConfig
+          stateName = rename
+          if (noPersisted) {
+            continue
+          }
+        }
+        setStorage(`${configData.prefix}${storeName}-${stateName}`, e.events[i].newValue)
+      }
+    },
+    {
+      flush: 'sync'
     }
-  })
+  )
 }
