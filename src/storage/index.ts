@@ -13,10 +13,10 @@ const getCrypto = () => {
  * @description 会根据当前的配置项来进行自动加密
  * @param {string} data
  */
-export const setStorage: SetStorage = (key, data, needCrypto) => {
+export const setStorage: SetStorage = (key, data) => {
   const storageAction = getStorageActionConfig()
   let _data = data
-  if (!configData.isDev && needCrypto) {
+  if (!configData.isDev) {
     _data = getCrypto().encrypt(data) || data
   }
   storageAction && storageAction.setItem(key, _data)
@@ -27,10 +27,10 @@ export const setStorage: SetStorage = (key, data, needCrypto) => {
  * @param {string} key
  * @return {any}
  */
-export const getStorage: GetStorage = (key, needCrypto) => {
+export const getStorage: GetStorage = (key) => {
   const storageAction = getStorageActionConfig()
   let _data = storageAction && storageAction.getItem(key)
-  if (!configData.isDev && needCrypto) {
+  if (!configData.isDev) {
     _data = _data ? getCrypto().decrypt(_data) : null
   }
   return _data

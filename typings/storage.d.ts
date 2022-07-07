@@ -1,9 +1,9 @@
 export interface SetStorage {
-  (key: string, data: string, needCrypto?: boolean = true): void
+  (key: string, data: string): void
 }
 
 export interface GetStorage {
-  (key: string, needCrypto?: boolean = true): any
+  (key: string): any
 }
 export interface RemoveStorage {
   (key: string): any
