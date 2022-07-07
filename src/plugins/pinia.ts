@@ -103,7 +103,6 @@ export const use: Pinia['use'] = (context) => {
   // react to store changes
   context.store.$subscribe(
     (e: SubscriptionCallbackMutationDirect) => {
-      console.log(e)
       const isEventArray = Array.isArray(e.events)
       // 如果event是空数组，说明是无用的patch（patch的数据和旧数据一样）
       if (isEventArray && e.events.length === 0) return
