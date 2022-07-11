@@ -4,6 +4,18 @@ import { getRenameStateByStore } from './index'
 import { SubscriptionCallbackMutationDirect, PiniaPluginContext } from 'pinia'
 import { Pinia } from '../../typings/plugins/index'
 
+// 将payload转换为key, newvalue的格式
+const transformPayload = (payload: Record<string, unknown>): { key: string; newValue: any }[] => {
+  const result: { key: string; newValue: string }[] = []
+  for (const key in payload) {
+    result.push({
+      key,
+      newValue: payload[key] as any
+    })
+  }
+  return result
+}
+
 /**
  * @name 推送store数据
  * @description 以store为中心推送数据到storage中
@@ -111,12 +123,16 @@ export const use: Pinia['use'] = (context) => {
         e.events = [e.events]
       }
       configData.isDev && console.log('🥷 react to store changes:')
+      // 如果events是undefined, 就要做一个数据兜底, 用payload数据替换
+      // payload是一个对象, 需要转换为key, newValue的格式
+      e.events = typeof e.events[0] === 'undefined' ? transformPayload((e as any).payload) : []
       if (configData.isDev) {
         for (const i in e.events) {
           console.log(`🥷 ${e.events[i].key} (${e.storeId}): ${e.events[i].oldValue} -> ${e.events[i].newValue}`)
         }
       }
       for (const i in e.events) {
+        console.log(e.events[i])
         let stateName = e.events[i].key
         const stateConfig = getStateConfig(context.store.$id, e.events[i].key)
         if (stateConfig) {
