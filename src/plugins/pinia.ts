@@ -16,6 +16,21 @@ const transformPayload = (payload: Record<string, unknown>): { key: string; newV
   return result
 }
 
+// 根据对象数组中的key, 进行去重
+const unique = (arr: Record<string, unknown>[]): Record<string, unknown>[] => {
+  const result: Record<string, unknown>[] = []
+  for (const i in arr) {
+    const item = arr[i]
+    if (result.findIndex((v) => v.key === item.key) === -1) {
+      result.push({
+        key: item.key,
+        newValue: item.newValue
+      })
+    }
+  }
+  return result
+}
+
 /**
  * @name 推送store数据
  * @description 以store为中心推送数据到storage中
@@ -122,13 +137,10 @@ export const use: Pinia['use'] = (context) => {
         e.events = [e.events]
       }
       configData.isDev && console.log('🥷 react to store changes:')
-      e.events = (e.events as any[]).filter((e) => typeof e !== 'undefined')
       // 如果events[0]是undefined, 就要做一个数据兜底, 用payload数据替换
       // payload是一个对象, 需要转换为key, newValue的格式
-      if (e.events.length === 0) {
-        e.events = transformPayload((e as any).payload)
-      }
-      for (const i in e.events) {
+      e.events = (e.events as any[]).filter((e) => typeof e !== 'undefined').concat(transformPayload((e as any).payload))
+      for (const i in unique(e.events)) {
         configData.isDev && console.log(`🥷 ${e.events[i].key} (${e.storeId}): ${e.events[i].oldValue} -> ${e.events[i].newValue}`)
         let stateName = e.events[i].key
         const stateConfig = getStateConfig(context.store.$id, e.events[i].key)

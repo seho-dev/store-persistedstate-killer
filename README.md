@@ -33,6 +33,27 @@ createApp(App)
    )
    .mount('#app')
 
+
+// in ts,vue,etc... (pinia)
+const userStore = useUserStore()
+userStore.$patch({
+  ...
+})
+
+// in action
+{
+   actions: {
+    async loadUserInfo(params) {
+      this.$patch({
+        ...
+      })
+    },
+  }
+}
+
+// tip: you must use `$patch` to update state, otherwise the state will not be persisted
+```
+
 ```
 
 ## Demo

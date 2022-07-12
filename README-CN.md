@@ -36,6 +36,26 @@ createApp(App)
   )
   .mount('#app')
 
+// in ts,vue,etc... (pinia)
+const userStore = useUserStore()
+userStore.$patch({
+  ...
+})
+
+// in action
+{
+   actions: {
+    async loadUserInfo(params) {
+      this.$patch({
+        ...
+      })
+    },
+  }
+}
+
+// tip: 建议使用patch修改state, 否则插件的订阅的回调会捕捉不到你更改了的state, 因此不会被持久化
+```
+
 ```
 
 ## Demo
