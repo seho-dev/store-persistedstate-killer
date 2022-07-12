@@ -118,21 +118,18 @@ export const use: Pinia['use'] = (context) => {
       const isEventArray = Array.isArray(e.events)
       // 如果event是空数组，说明是无用的patch（patch的数据和旧数据一样）
       if (isEventArray && e.events.length === 0) return
-      // 更新 storage
       if (!isEventArray) {
         e.events = [e.events]
       }
       configData.isDev && console.log('🥷 react to store changes:')
-      // 如果events是undefined, 就要做一个数据兜底, 用payload数据替换
+      e.events = (e.events as any[]).filter((e) => typeof e !== 'undefined')
+      // 如果events[0]是undefined, 就要做一个数据兜底, 用payload数据替换
       // payload是一个对象, 需要转换为key, newValue的格式
-      e.events = typeof e.events[0] === 'undefined' ? transformPayload((e as any).payload) : []
-      if (configData.isDev) {
-        for (const i in e.events) {
-          console.log(`🥷 ${e.events[i].key} (${e.storeId}): ${e.events[i].oldValue} -> ${e.events[i].newValue}`)
-        }
+      if (e.events.length === 0) {
+        e.events = transformPayload((e as any).payload)
       }
       for (const i in e.events) {
-        console.log(e.events[i])
+        configData.isDev && console.log(`🥷 ${e.events[i].key} (${e.storeId}): ${e.events[i].oldValue} -> ${e.events[i].newValue}`)
         let stateName = e.events[i].key
         const stateConfig = getStateConfig(context.store.$id, e.events[i].key)
         if (stateConfig) {
